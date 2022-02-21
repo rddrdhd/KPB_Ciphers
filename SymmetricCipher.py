@@ -11,7 +11,7 @@ class Cipher:
     @staticmethod
     def shift(text, key):
         # only upper aphabetic letters
-        text = ''.join([i for i in text.upper() if i.isalpha()])
+        text = Helper.getCleanText(text)
 
         result = ""
         for i in range(len(text)):
@@ -44,13 +44,16 @@ class Cipher:
 
     @staticmethod
     def transposition(coded_text, key, encrypt=True):  # TODO decrypt
+        # Fill the original message with padding
         while len(coded_text) % len(key) != 0:
             coded_text += "X"
 
-        result_row_trans = ['' for i in range(len(coded_text))]
+        result_row_trans = []
         result_col_trans = ['' for i in range(len(coded_text))]
         max_rows = int(len(coded_text) / len(key))
-        matrix=[]
+
+        # build the transposition matrix
+        matrix = []
         for i in range(max_rows):
             matrix.append([])
             for j in range(len(key)):
@@ -59,23 +62,21 @@ class Cipher:
         for i, char in enumerate(coded_text):
             row_number = int(i / len(key))
             column_number = i % len(key)
-            new_column_index = int(key[column_number])
-            new_index_for_row_trans = (row_number * (len(key))) + new_column_index
-            new_index_for_col_trans = (new_column_index * (len(key))) + row_number
-            matrix[row_number][new_column_index-1] = char
-            # print(str(row_number)+"*"+str(len(key))+"+"+str(new_column_index)+"=\t"+str(new_index))
-            if char != "X":
-                result_row_trans[new_index_for_row_trans - 1] = char
-                result_col_trans[new_index_for_col_trans - 1] = char
 
-            # result[i] = coded_text[new_index]
+            new_column_number = key.index(str(column_number + 1))
+            matrix[row_number][new_column_number] = char
 
+        # read by rows
+        for y, row in enumerate(matrix):
+            for x, cell in enumerate(row):
+                result_row_trans += cell
 
-
-            # print(str(i)+":\t"+char+"("+str(column_number+1)+"->"+str(new_column_index)+")\t("+str(row_number)+")")
+        # read by columns
+        for x in range(len(key)):
+            result_col_trans += [row[x] for row in matrix]
 
         return {
-            'rowTransposition': "".join(result_row_trans),
-            'colTransposition': "".join(result_col_trans),
+            'rowTransposition': ''.join(result_row_trans),
+            'colTransposition': ''.join(result_col_trans),
             'matrix': matrix,
-                }
+        }
