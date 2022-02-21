@@ -24,20 +24,21 @@ def cv3():
     K =  "ZIMA"
     print("Vigener:\n\t"+Cipher.vigener(M, K, decrypt=False))
 
-    #M = "THESIMPLESTPOSSIBLETRANSPOSITIONS"
-    #K = "41532"
+    char_key = "PROJEV"
     M = "RUSKYPREZIDENTVLADIMIRPUTINPRONESLVECTVRTEKTRADICNIPROJEVOSTAVUFEDERACEVENOVALSETOMUZERUSKOMUSIPOKRACOVATVTRANSFORMACIANEMUZESESPOKOJITSESOUCASNYMSTAVEMZMINILSTOUPAJICIPOCETCHUDYCHIZAOSTALOUINFRASTRUKTURUNUTNOUPODPORUDUCHODCUMIMLADYMRODINYMABYSEZVRYTILNEPRIZNIVYDEMOGRAFICKYVYVOJ"
-    K = "453216"#PROJEV
+    K = Helper.get_trans_key_from_word(char_key)
     result = Cipher.transposition(M, K)
+    print("Key:\t"+K)
     print("Col transposition:\n\t"+result["colTransposition"])
     print("Row transposition:\n\t"+result["rowTransposition"])
     #for row in result["matrix"]: print(row)
-    print(Helper.get_trans_key_from_word("PROJEV"))
 
 
 if __name__ == '__main__':
     # cv2()
-    #cv02 = Window()
-    #cv02.run02()
+    window = Window()
+    window.cv02()
+    window.cv03()
+    window.run()
     cv3()
 

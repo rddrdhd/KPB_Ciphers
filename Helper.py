@@ -34,4 +34,12 @@ class Helper:
 
     @staticmethod
     def get_trans_key_from_word(word):
-
+        ordered_word = ""
+        number_word = ['' for i in word]
+        char_number = 1
+        for char in Helper.ALPHABET:
+            if char in word:
+                ordered_word += char
+                number_word[word.index(char)] = str(char_number)
+                char_number += 1
+        return ''.join(number_word)

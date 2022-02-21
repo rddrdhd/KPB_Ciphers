@@ -5,7 +5,7 @@ from tkinter.messagebox import *
 from Helper import Helper
 from SymmetricCipher import Cipher
 
-DEFAULT_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+DEFAULT_ALPHABET = Helper.ALPHABET
 p = 5  # padding value
 
 
@@ -14,88 +14,68 @@ class Window:
     def __init__(self):
         self.root = tk.Tk()
         self.root.title('KPB | ZUR0037')
+        self.row_count = 0
+        self.alphabet = DEFAULT_ALPHABET
+        self.key_string = "key string"
 
+        self.cipher_text = tk.StringVar(self.root)
+        self.shift_number = tk.IntVar(self.root)
+
+    def cv02(self):
         vcmd = ('%d', '%i', '%P', '%s', '%S', '%v', '%V', '%W')  # for validating integer
-
-        #
-        ttk.Label(self.root, text='Ceasarova šifra a obecná substituce\n').grid(row=0, column=1, ipadx=p, ipady=10)
-        ##
-        ttk.Label(self.root, text='Text k dekódování/zakódování').grid(row=1, column=0, ipadx=p, ipady=10)
-
-        self.ciphertext = tk.StringVar(self.root)
-        ciphertext_input = ttk.Entry(self.root, textvariable=self.ciphertext)
+        ttk.Label(self.root, text='\nCV1\n\nCeasarova šifra a obecná substituce\n').grid(row=self.row_count, column=1, ipadx=p, ipady=10)
+        self.row_count += 1
+        ttk.Label(self.root, text='Text k dekódování/zakódování').grid(row=self.row_count, column=0, ipadx=p, ipady=10)
+        ciphertext_input = ttk.Entry(self.root, textvariable=self.cipher_text)
         ciphertext_input.grid(row=1, column=1, ipadx=p, ipady=p)
         ciphertext_input.focus()
-
-        ttk.Button(self.root, text='Všechny posuny',
-                   command=lambda: self.button_clicked('BRUTEFORCE')) \
-            .grid(row=1, column=2, ipadx=p, ipady=p)
-
-        ###
-        ttk.Label(self.root, text='Posun o kolik znaků').grid(row=2, column=0, ipadx=p, ipady=10)
-
-        self.keynumber = tk.IntVar(self.root)
-        keynumber_input = ttk.Entry(self.root, textvariable=self.keynumber, validate='key', validatecommand=vcmd)
+        ttk.Button(self.root, text='Všechny posuny', command=lambda: self.button_clicked('BRUTEFORCE')).grid(row=1, column=2, ipadx=p, ipady=p)
+        self.row_count += 1
+        ttk.Label(self.root, text='Posun o kolik znaků').grid(row=self.row_count, column=0, ipadx=p, ipady=10)
+        keynumber_input = ttk.Entry(self.root, textvariable=self.shift_number, validate='key', validatecommand=vcmd)
         keynumber_input.grid(row=2, column=1, ipadx=p, ipady=p)
-
-        ttk.Button(self.root, text='Posun',
-                   command=lambda: self.button_clicked('NUMBER_KEY')) \
-            .grid(row=2, column=2, ipadx=p, ipady=p)
-
-        ####
-        ttk.Label(self.root, text='Abeceda pro substituci').grid(row=3, column=0, ipadx=p, ipady=10)
-
+        ttk.Button(self.root, text='Posun', command=lambda: self.button_clicked('NUMBER_KEY')).grid(row=2, column=2, ipadx=p, ipady=p)
+        self.row_count += 1
+        ttk.Label(self.root, text='Abeceda pro substituci').grid(row=self.row_count, column=0, ipadx=p, ipady=10)
         self.alphabet = tk.StringVar(self.root)
         self.alphabet.set(DEFAULT_ALPHABET)
         alphabet_input = ttk.Entry(self.root, textvariable=self.alphabet)
         alphabet_input.grid(row=3, column=1, ipadx=p, ipady=p)
+        ttk.Button(self.root, text='Substituce', command=lambda: self.button_clicked('SUBSTITUTE')).grid(row=3, column=2, ipadx=p, ipady=p)
+        self.row_count += 1
+        ttk.Button(self.root, text='Výchozí abeceda', command=lambda: self.button_alphabet('DEFAULT_APLHABET')).grid(row=self.row_count, column=0, ipadx=p, ipady=p)
+        ttk.Button(self.root, text='Vygenerovat náhodnou abecedu', command=lambda: self.button_alphabet('RANDOM_APLHABET')).grid(row=4, column=1, ipadx=p, ipady=p)
+        self.row_count += 1
 
-        ttk.Button(self.root, text='Substituce',
-                   command=lambda: self.button_clicked('SUBSTITUTE')).grid(row=3, column=2, ipadx=p, ipady=p)
-        #####
-        ttk.Button(self.root, text='Výchozí abeceda',
-                   command=lambda: self.button_clicked('DEFAULT_APLHABET')).grid(row=4, column=0, ipadx=p, ipady=p)
-        ttk.Button(self.root, text='Vygenerovat náhodnou abecedu',
-                   command=lambda: self.button_clicked('RANDOM_APLHABET')).grid(row=4, column=1, ipadx=p, ipady=p)
-        ######
+
+    def run(self):
+        ttk.Label(self.root, text='\n\n\n').grid(row=self.row_count, column=1,
+                                                                                     ipadx=p, ipady=10)
+
         ttk.Button(self.root, text='Konec',
-                   command=lambda: self.root.quit()).grid(row=10, column=2, ipadx=p, ipady=p)
-
-    def validate(self, action, index, value_if_allowed,
-                 prior_value, text, validation_type, trigger_type, widget_name):
-        if value_if_allowed:
-            try:
-                int(value_if_allowed)
-                return True
-            except ValueError:
-                return False
-        else:
-            return False
-
-    def run02(self):
+                   command=lambda: self.root.quit()).grid(row=self.row_count, column=1, ipadx=p, ipady=p)
         self.root.mainloop()
 
-    def button_clicked(self, option):
-
+    def button_alphabet(self, option):
         if option == 'RANDOM_APLHABET':
             self.alphabet.set(Helper.get_random_permutation(DEFAULT_ALPHABET))
         if option == 'DEFAULT_APLHABET':
             self.alphabet.set(DEFAULT_ALPHABET)
-        else:
-            # Letters to upper
-            ciphertext = ''.join([i for i in self.ciphertext.get().upper() if i.isalpha()])
-            alphabet = ''.join([i for i in self.alphabet.get().upper() if i.isalpha()])
-            alphabet = "".join(dict.fromkeys(alphabet))  # unique for Ceasar
 
-            # Only 26 letters
-            is_alphabet_good = all(c in DEFAULT_ALPHABET for c in alphabet.upper())
-            is_ciphertext_good = all(c in DEFAULT_ALPHABET for c in ciphertext.upper())
+    def button_clicked(self, option):
+        # Letters to upper
+        ciphertext = ''.join([i for i in self.cipher_text.get().upper() if i.isalpha()])
+        alphabet = ''.join(dict.fromkeys([i for i in self.alphabet.get().upper() if i.isalpha()])) # unique
 
-            try:
-                keynumber = self.keynumber.get()
-                keynumber = int(keynumber) % len(alphabet) if keynumber.isnumeric() else 0
-            except:
-                keynumber = 0
+        # Only 26 letters
+        is_alphabet_good = all(c in DEFAULT_ALPHABET for c in alphabet.upper())
+        is_ciphertext_good = all(c in DEFAULT_ALPHABET for c in ciphertext.upper())
+
+        try:
+            keynumber = self.shift_number.get()
+            keynumber = int(keynumber) % len(alphabet) if keynumber.isnumeric() else 0
+        except:
+            keynumber = 0
 
         if len(ciphertext) == 0:
             showerror(title="Problém", message="Není vyplněný text k vyluštění.")
@@ -107,9 +87,9 @@ class Window:
             message = "Původní text:\n"
             message += ciphertext + "\n\n"
             message += "Klíč:\n"
-            message += alphabet + "\n\n"
 
             if option == 'BRUTEFORCE':  # Show all 26 shifts
+                message += DEFAULT_ALPHABET + "\n\n"
                 message += "Posun:\tvýsledek:\n"
                 for i in range(len(alphabet)):
                     result = Cipher.alphabet_shift(ciphertext, i)
@@ -117,9 +97,10 @@ class Window:
                 showinfo(title="Result", message=message)
 
             elif option == 'NUMBER_KEY':  # show one shift
+                message += DEFAULT_ALPHABET + "\n\n"
                 message += "Posun:\tvýsledek:\n"
                 try:
-                    keynumber = int(self.keynumber.get()) % len(alphabet)
+                    keynumber = int(self.shift_number.get()) % len(alphabet)
                     result = Cipher.alphabet_shift(ciphertext, keynumber)
                     message += ">" + str(result["shift"]) + "\t" + result["result"] + "\n"
                     showinfo(title="Result", message=message)
@@ -128,8 +109,29 @@ class Window:
 
 
             elif option == 'SUBSTITUTE':
+                message += str(self.alphabet) + "\n\n"
                 message += "výsledek:\n"
-
                 message += Cipher.substitute(ciphertext, DEFAULT_ALPHABET, alphabet)
-
                 showinfo(title="Result", message=message)
+            else:
+                print("idk")
+
+    def cv03(self):
+        ttk.Label(self.root, text='\nCV2\n\nVigenerova a transpoziční šifra\n').grid(row=self.row_count, column=1, ipadx=p, ipady=10)
+        self.row_count += 1
+        ttk.Label(self.root, text='Text k dekódování/zakódování').grid(row=self.row_count, column=0, ipadx=p, ipady=10)
+        ciphertext_input = ttk.Entry(self.root, textvariable=self.cipher_text)
+        ciphertext_input.grid(row=self.row_count, column=1, ipadx=p, ipady=p)
+        ciphertext_input.focus()
+
+        self.row_count += 1
+        key_input = ttk.Entry(self.root, textvariable=self.key_string)
+        key_input.grid(row=self.row_count, column=1, ipadx=p, ipady=p)
+        ttk.Button(self.root,
+                   text='Vigenerova šifra',
+                   command=lambda: self.button_clicked('VIGENER')
+                   ).grid(row=self.row_count, column=2, ipadx=p, ipady=p)
+        self.row_count += 1
+        #TODO zbytek
+
+
