@@ -78,7 +78,7 @@ class Window:
     def button_clicked(self, option):
 
         if option == 'RANDOM_APLHABET':
-            self.alphabet.set(Helper.getRandomPermutation(DEFAULT_ALPHABET))
+            self.alphabet.set(Helper.get_random_permutation(DEFAULT_ALPHABET))
         if option == 'DEFAULT_APLHABET':
             self.alphabet.set(DEFAULT_ALPHABET)
         else:
@@ -112,7 +112,7 @@ class Window:
             if option == 'BRUTEFORCE':  # Show all 26 shifts
                 message += "Posun:\tvýsledek:\n"
                 for i in range(len(alphabet)):
-                    result = Cipher.shift(ciphertext, i)
+                    result = Cipher.alphabet_shift(ciphertext, i)
                     message += ">" + str(result["shift"]) + "\t" + result["result"] + "\n"
                 showinfo(title="Result", message=message)
 
@@ -120,7 +120,7 @@ class Window:
                 message += "Posun:\tvýsledek:\n"
                 try:
                     keynumber = int(self.keynumber.get()) % len(alphabet)
-                    result = Cipher.shift(ciphertext, keynumber)
+                    result = Cipher.alphabet_shift(ciphertext, keynumber)
                     message += ">" + str(result["shift"]) + "\t" + result["result"] + "\n"
                     showinfo(title="Result", message=message)
                 except:

@@ -9,9 +9,9 @@ def cv2():
 
     # CEASAR
     for i in range(len(Helper.ALPHABET)):
-        print(Cipher.shift(zasifrovany_text, i))
+        print(Cipher.alphabet_shift(zasifrovany_text, i))
 
-    RANDOM_ALPHABET = Helper.getRandomPermutation(Helper.ALPHABET)
+    RANDOM_ALPHABET = Helper.get_random_permutation(Helper.ALPHABET)
 
     # OBECNY ALGORITMUS SUBSTITUCE
     C = "WIRFR WAJUH YFTSD VFSFU UFYA"
@@ -29,12 +29,10 @@ def cv3():
     M = "RUSKYPREZIDENTVLADIMIRPUTINPRONESLVECTVRTEKTRADICNIPROJEVOSTAVUFEDERACEVENOVALSETOMUZERUSKOMUSIPOKRACOVATVTRANSFORMACIANEMUZESESPOKOJITSESOUCASNYMSTAVEMZMINILSTOUPAJICIPOCETCHUDYCHIZAOSTALOUINFRASTRUKTURUNUTNOUPODPORUDUCHODCUMIMLADYMRODINYMABYSEZVRYTILNEPRIZNIVYDEMOGRAFICKYVYVOJ"
     K = "453216"#PROJEV
     result = Cipher.transposition(M, K)
-    print("Row transposition:\n\t"+result["rowTransposition"])
     print("Col transposition:\n\t"+result["colTransposition"])
-    matrix = result["matrix"]
-
-    #for row in matrix: print(row)
-
+    print("Row transposition:\n\t"+result["rowTransposition"])
+    #for row in result["matrix"]: print(row)
+    print(Helper.get_trans_key_from_word("PROJEV"))
 
 
 if __name__ == '__main__':

@@ -9,9 +9,9 @@ class Cipher:
     # znaky a malá písmena. Vytvořte jednoduché GUI (stačí na příštím cvičení) pro vstup otevřeného textu, výstup šifrového,
     # čtení / zápis ze soboru atd.
     @staticmethod
-    def shift(text, key):
+    def alphabet_shift(text, key):
         # only upper aphabetic letters
-        text = Helper.getCleanText(text)
+        text = Helper.get_clean_text(text)
 
         result = ""
         for i in range(len(text)):
@@ -31,34 +31,34 @@ class Cipher:
             result += key_alphabet[alphabet.index(char)]
         return result
 
+    # Zadání (02 - 21.2.2022): http://www.cs.vsb.cz/ochodkova/courses/kpb/Cviceni%202_2022.pdf
+    # Pracujte s přípustnou abecedou obsahující jen znaky anglické
+    # abecedy bez mezery. Implementujte jak šifrování, tak dešifrování.
     @staticmethod
     def vigener(coded_text, key, decrypt=True):  # Todo decrypt
         r = ""
         for i, char in enumerate(coded_text):
-            key_index = i % len(key)
-            key_char = key[key_index]
+            key_char = key[i % len(key)]
             key_number = Helper.ALPHABET.index(key_char)
-            result = Cipher.shift(char, key_number)
-            r += result["result"]
+            result_char = Cipher.alphabet_shift(char, key_number)
+            r += result_char["result"]
         return r
 
+    # Zadání (02 - 21.2.2022):
+    # Naimplementujte transpoziční šifru: columnar + row transposition
+    # Pracujte s přípustnou abecedou obsahující jen znaky anglické abecedy bez mezery.
+    # Implementujte jak šifrování, tak dešifrování.
     @staticmethod
     def transposition(coded_text, key, encrypt=True):  # TODO decrypt
         # Fill the original message with padding
-        while len(coded_text) % len(key) != 0:
-            coded_text += "X"
+        coded_text = Helper.fill_with_padding("X", len(key), coded_text)
 
-        result_row_trans = []
-        result_col_trans = ['' for i in range(len(coded_text))]
+        result_by_rows = ""
+        result_by_cols = ""
         max_rows = int(len(coded_text) / len(key))
 
         # build the transposition matrix
-        matrix = []
-        for i in range(max_rows):
-            matrix.append([])
-            for j in range(len(key)):
-                matrix[i].append('')
-
+        matrix = Helper.get_empty_matrix(max_rows, len(key))
         for i, char in enumerate(coded_text):
             row_number = int(i / len(key))
             column_number = i % len(key)
@@ -69,14 +69,14 @@ class Cipher:
         # read by rows
         for y, row in enumerate(matrix):
             for x, cell in enumerate(row):
-                result_row_trans += cell
+                result_by_rows += cell
 
         # read by columns
         for x in range(len(key)):
-            result_col_trans += [row[x] for row in matrix]
+            result_by_cols += ''.join([row[x] for row in matrix])
 
         return {
-            'rowTransposition': ''.join(result_row_trans),
-            'colTransposition': ''.join(result_col_trans),
+            'rowTransposition': result_by_rows,
+            'colTransposition': result_by_cols,
             'matrix': matrix,
         }
