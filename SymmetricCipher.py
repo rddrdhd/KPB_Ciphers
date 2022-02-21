@@ -1,3 +1,5 @@
+from Helper import Helper
+
 class Cipher:
     # Zadání (01 - 14.2.2022):
     # Naimplementujte zobecněnou Caesarovu šifru, tedy šifrovací algoritmus označovaný jako Shift cipher.
@@ -15,7 +17,7 @@ class Cipher:
             letter = text[i]
             # mapping letters to int, 65==A
             result += chr((ord(letter) + key-65) % 26 + 65)
-        return {"shift": key, "shiftback": key, "result": result}
+        return {"shift": key, "shiftback": 26-key, "input": text, "result": result}
 
     # Zadání (01 - 14.2.2022):
     # Naimplementujte Obecnou substituční šifru.
@@ -28,3 +30,21 @@ class Cipher:
             result += key_alphabet[alphabet.index(char)]
         return result
 
+    @staticmethod
+    def vigener(coded_text, key, decrypt=True):
+        r = ""
+        for i, char in enumerate(coded_text):
+            key_index = i % len(key)
+            key_char = key[key_index]
+            key_number = Helper.ALPHABET.index(key_char)
+            #print(key[key_index])
+
+            result = Cipher.shift(char,key_number)
+            print("keychar:"+key_char)
+            print("keynum:"+str(key_number))
+            print("shiftback:"+str(result["shiftback"]))
+            print("input:"+result["input"])
+            print("result:"+result["result"])
+            print()
+            r += result["result"]
+        return r

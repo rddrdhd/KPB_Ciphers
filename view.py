@@ -72,7 +72,7 @@ class Window:
         else:
             return False
 
-    def run(self):
+    def run02(self):
         self.root.mainloop()
 
     def button_clicked(self, option):
