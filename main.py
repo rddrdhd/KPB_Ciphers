@@ -24,9 +24,8 @@ def cv3():
     K =  "ZIMA"
     print("Vigener:\n\t"+Cipher.vigener(M, K, decrypt=False))
 
-    char_key = "PROJEV"
     M = "RUSKYPREZIDENTVLADIMIRPUTINPRONESLVECTVRTEKTRADICNIPROJEVOSTAVUFEDERACEVENOVALSETOMUZERUSKOMUSIPOKRACOVATVTRANSFORMACIANEMUZESESPOKOJITSESOUCASNYMSTAVEMZMINILSTOUPAJICIPOCETCHUDYCHIZAOSTALOUINFRASTRUKTURUNUTNOUPODPORUDUCHODCUMIMLADYMRODINYMABYSEZVRYTILNEPRIZNIVYDEMOGRAFICKYVYVOJ"
-    K = Helper.get_trans_key_from_word(char_key)
+    K = Helper.get_trans_key_from_word("PROJEV")
     result = Cipher.transposition(M, K)
     print("Key:\t"+K)
     print("Col transposition:\n\t"+result["colTransposition"])
